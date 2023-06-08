@@ -29,3 +29,15 @@ readdirSync(handlersDir).forEach((handler) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+
+/// OAUTH2 Testing
+import express from 'express'
+import { color } from "./functions";
+
+const app = express();
+const PORT = process.env.PORT | 3001;
+
+app.listen(PORT, () => {
+    console.log(color("text", `📡 Successfully listening to requests on port ${color("variable", PORT)}`))
+})
