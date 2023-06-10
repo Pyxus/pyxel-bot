@@ -37,8 +37,10 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             DISCORD_TOKEN: string,
-            CLIENT_ID: string,
-            PREFIX: string,
+            DISCORD_CLIENT_ID: string,
+            DISCORD_CLIENT_SECRET: string,
+            DISCORD_CLIENT_REDIRECT: string,
+            DISCORD_DEFAULT_PREFIX: string,
             MONGO_URI: string,
             MONGO_DATABASE_NAME: string,
             PORT: number

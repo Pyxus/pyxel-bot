@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import GuildModel from "../schemas/Guild";
+import GuildModel from "@database/models/Guild";
 import { BotEvent } from "../types";
 
 const event: BotEvent = {
@@ -8,7 +8,7 @@ const event: BotEvent = {
         let newGuild = new GuildModel({
             guildID: guild.id,
             options: {},
-            joinedAt: Date.now()
+            joinedAt: Date.now(),
         })
         newGuild.save()
     }
