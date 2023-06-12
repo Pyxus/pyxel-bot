@@ -1,7 +1,7 @@
 import chalk from "chalk"
 import { Guild, GuildMember, PermissionFlagsBits, PermissionResolvable, PermissionsBitField, TextChannel } from "discord.js"
-import GuildDB from "./database/models/Guild"
-import { GuildOption } from "./types"
+import GuildDB from "../database/models/Guild"
+import { GuildOption } from '@database/models/Guild'
 import mongoose from "mongoose";
 
 type colorType = "text" | "variable" | "error"

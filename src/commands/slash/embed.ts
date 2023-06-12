@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChannelType, TextChannel, EmbedBuilder, ColorResolvable, ApplicationCommandChoicesData } from "discord.js"
-import { SlashCommand } from "../../types";
+import { SlashCommand } from '@commands/types';
 
 const command: SlashCommand = {
   command: new SlashCommandBuilder()

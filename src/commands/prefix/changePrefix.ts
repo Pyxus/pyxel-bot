@@ -1,7 +1,7 @@
-import { setGuildOption } from "../../functions";
-import { Command } from "../../types";
+import { setGuildOption } from "../../utils/functions";
+import { PrefixCommand } from '@commands/types';
 
-const command: Command = {
+const command: PrefixCommand = {
     name: "changePrefix",
     execute: (message, args) => {
         let prefix = args[1]

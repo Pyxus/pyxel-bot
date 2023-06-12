@@ -1,7 +1,7 @@
 import { PermissionFlagsBits } from "discord.js";
-import { Command } from "../../types";
+import { PrefixCommand } from '@commands/types';
 
-const command : Command = {
+const command : PrefixCommand = {
     name: "greet",
     execute: (message, args) => {
         let toGreet = message.mentions.members?.first()

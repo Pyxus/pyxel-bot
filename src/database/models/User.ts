@@ -1,11 +1,10 @@
 import mongoose, { Schema, model } from 'mongoose';
-import { IGuild } from '../../types';
 
-interface IUser extends mongoose.Document{
-    discordId: String,
-    discordTag: String,
-    avatar: String,
-    guilds: String[],
+export interface IUser extends mongoose.Document{
+    discordId: string,
+    discordTag: string,
+    avatar: string,
+    guilds: string[],
 }
 
 const UserSchema = new Schema<IUser>({

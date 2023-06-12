@@ -1,6 +1,6 @@
 import { Guild } from "discord.js";
 import GuildModel from "@database/models/Guild";
-import { BotEvent } from "../types";
+import {BotEvent} from '@events/types'
 
 const event: BotEvent = {
     name: "guildCreate",
