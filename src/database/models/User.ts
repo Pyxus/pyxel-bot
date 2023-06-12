@@ -1,10 +1,12 @@
 import mongoose, { Schema, model } from 'mongoose';
+import {IGuildInfo, GuildInfoSchema} from './GuildInfo';
+
 
 export interface IUser extends mongoose.Document{
     discordId: string,
     discordTag: string,
     avatar: string,
-    guilds: string[],
+    guilds: IGuildInfo[],
 }
 
 const UserSchema = new Schema<IUser>({
@@ -21,7 +23,7 @@ const UserSchema = new Schema<IUser>({
         type: String
     },
     guilds: {
-        type: [String]
+        type: [GuildInfoSchema],
     }
 });
 
