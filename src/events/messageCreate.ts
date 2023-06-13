@@ -45,23 +45,15 @@ interface GuildCache {
     music_session?
     : MusicSession
 }
-const YDL_OPTS = {
-	format: 'm4a/bestaudio/best',
-	outtmpl: 'music/%(title)s.%(ext)s',
-	socket_timeout: 2000,
-	postprocessors: [{
-		key: 'FFmpegExtractAudio',
-		preferredcodec: 'mp3',
-	}]
-}
+
 const YT_LINK_REGEX = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w\-]{11}/;
-const cache_by_id = new Map<string, GuildCache>();
+const cacheById = new Map<string, GuildCache>();
 
 
 const fetchGuildCache = async (guildId: string) => {
     const guildCache: GuildCache = {id: guildId, prefix: process.env.DISCORD_DEFAULT_PREFIX}
 
-    if (!cache_by_id.has(guildId)){
+    if (!cacheById.has(guildId)){
         const guild = await GuildModel.findOne({id: guildId});
         
         if (guild){
@@ -87,35 +79,37 @@ const event: BotEvent = {
         const guildCache = await fetchGuildCache(message.guild.id);
         const prefix = guildCache.prefix;
 
-        // Check for YT URL
-        const searchResult = YT_LINK_REGEX.exec(message.content)
-        if (searchResult){
-            await message.react('🎶');
-
-            const ytLink = searchResult[0];
-            const ytInfo = await ytdl.getInfo(ytLink);
-            const saveDir = `downloads/music/${message.guild.id}`
-            const savePath = `${saveDir}/${ytInfo.videoDetails.videoId}.mp3`
-            const song: Song = {name: ytInfo.videoDetails.title, url: savePath }
-
-            if (!fs.existsSync(saveDir))
-                fs.mkdirSync(saveDir, {recursive: true});
-
-            ytdl.downloadFromInfo(ytInfo, {filter: 'audioonly'})
-                .pipe(fs.createWriteStream(savePath))
-            
-            
-            // Start new music session or if one exists add this song to queue
-        }
-
-        // Check for MP3
-        message.attachments.forEach(async (attachment) => {
-            if (attachment.contentType === 'audio/mpeg'){
+        if (message.channel.id == guildCache.music_channel){
+            // Check for YT URL
+            const searchResult = YT_LINK_REGEX.exec(message.content)
+            if (searchResult){
                 await message.react('🎶');
-                const song: Song = {name: attachment.name!, url: attachment.url }
+
+                const ytLink = searchResult[0];
+                const ytInfo = await ytdl.getInfo(ytLink);
+                const saveDir = `downloads/music/${message.guild.id}`
+                const savePath = `${saveDir}/${ytInfo.videoDetails.videoId}.mp3`
+                const song: Song = {name: ytInfo.videoDetails.title, url: savePath }
+
+                if (!fs.existsSync(saveDir))
+                    fs.mkdirSync(saveDir, {recursive: true});
+
+                ytdl.downloadFromInfo(ytInfo, {filter: 'audioonly'})
+                    .pipe(fs.createWriteStream(savePath))
+                
+                
                 // Start new music session or if one exists add this song to queue
             }
-        })
+
+            // Check for MP3
+            message.attachments.forEach(async (attachment) => {
+                if (attachment.contentType === 'audio/mpeg'){
+                    await message.react('🎶');
+                    const song: Song = {name: attachment.name!, url: attachment.url }
+                    // Start new music session or if one exists add this song to queue
+                }
+            })
+        }
 
         if (!message.content.startsWith(prefix)) return;
         if (message.channel.type !== ChannelType.GuildText) return;
