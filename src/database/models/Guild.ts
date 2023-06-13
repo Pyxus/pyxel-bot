@@ -1,21 +1,27 @@
 import mongoose, { Schema, model } from 'mongoose';
 
 interface GuildOptions {
-    prefix: string,
+	prefix: string;
+	music_channel: string;
 }
 
-export type GuildOption = keyof GuildOptions
+export type GuildOption = keyof GuildOptions;
 
 export interface IGuild extends mongoose.Document {
-    guildID: string,
-    options: GuildOptions
-    joinedAt: Date
+	id: string;
+	options: GuildOptions;
+	joinedAt: Date;
 }
 
 const GuildSchema = new Schema<IGuild>({
-	guildID: { type: String, required: true, unique: true },
+	id: { type: String, required: true, unique: true },
 	options: {
-		prefix: { type: String, required: true, default: process.env.DISCORD_DEFAULT_PREFIX },
+		prefix: { type: String, required: true, default: '!' },
+		music_channel: {type: String}
+	},
+	joinedAt: {
+		type: Date,
+		default: Date.now(),
 	},
 });
 

@@ -1,8 +1,20 @@
 import { Router } from 'express';
-import { getBotGuilds } from '../utils/api';
-import UserModel, {IUser} from '@database/models/User';
+import UserModel, { IUser } from '@database/models/User';
+import axios from 'axios';
+import { IGuildInfo } from '@database/models/GuildInfo';
+import GuildModel from '@database/models/Guild';
 
+const PERMISSION_MANAGE_GUILD = 0x20;
 const router = Router();
+
+export async function getBotGuilds() {
+	const res = await axios.get('http://discord.com/api/v6/users/@me/guilds', {
+		headers: {
+			Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+		},
+	});
+	return res.data;
+}
 
 router.get('/guilds', async (req, res) => {
 	const discordUser = req.user as IUser;
@@ -12,12 +24,16 @@ router.get('/guilds', async (req, res) => {
 	});
 
 	if (user) {
-		const mutualGuilds = user.guilds.filter((guild) =>
-			botGuilds.find((botGuild: any) => (botGuild.id == guild) && (botGuild.permissions & 0x20) === 0x20)
+		const mutualGuilds = user.guilds.filter((userGuild) =>
+			botGuilds.find(
+				(botGuild: IGuildInfo) =>
+					botGuild.id === userGuild.id &&
+					(userGuild.permissions & PERMISSION_MANAGE_GUILD) ===
+						PERMISSION_MANAGE_GUILD
+			)
 		);
+		res.send(mutualGuilds);
 	}
-
-	res.send(botGuilds);
 });
 
 export default router;

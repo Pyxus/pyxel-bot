@@ -35,9 +35,6 @@ function setupDiscordStrategy(){
 			},
 			async (accessToken, refreshToken, profile, done) => {
 				const { id, username, discriminator, avatar, guilds } = profile;
-				if (guilds){
-					console.log(guilds[0])
-				}
 
 				try {
 					//const guildIds = guilds ? guilds.map((guild) => guild.id) : []
